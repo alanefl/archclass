@@ -106,5 +106,12 @@ venv.bak/
 # IDEs
 .idea/
 
-$ data
+# MAC
+**/__MACOSX/
+**/.DS_Store
+
+# Data
 *.zip
+data/**/*.jpg
+data/arc_dataset
+

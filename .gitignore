@@ -113,5 +113,6 @@ venv.bak/
 # Data
 *.zip
 data/**/*.jpg
+data/_arc_dataset
 data/arc_dataset
 

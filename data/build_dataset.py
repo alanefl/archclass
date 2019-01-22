@@ -1,14 +1,14 @@
-"""Split Architecture Style dataset into train/dev/test, and resize images to 64 x 64.
+"""Download dataset, Split Architecture Style dataset into train/dev/test,
+and resize images to 64 x 64.
 
 
 Resizing:
     Original images vary in sizes.
 
-Train/Dev/Test split:
-
 
 """
 import random
+import requests
 import os
 import zipfile
 
@@ -17,8 +17,40 @@ from tqdm import tqdm
 
 SIZE = 128
 ZIP_FILE_NAME = "arc_dataset.zip"
-DATA_DIR = "arc_dataset"
+DATA_DIR = "_arc_dataset"
 OUTPUT_DIR = "prepared_arc_dataset"
+GDRIVE_FILE_ID = '1fJfclq0ULmSX_E6g6qeO2Ff0DtcUW1eh'
+GDRIVE_FILE_DEST = 'arc_dataset.zip'
+
+
+def download_file_from_google_drive(id, destination):
+    URL = "https://docs.google.com/uc?export=download"
+
+    session = requests.Session()
+
+    response = session.get(URL, params={'id': id}, stream=True)
+    token = get_confirm_token(response)
+
+    if token:
+        params = {'id': id, 'confirm': token}
+        response = session.get(URL, params=params, stream=True)
+
+    save_response_content(response, destination)
+
+
+def get_confirm_token(response):
+    for key, value in response.cookies.items():
+        if key.startswith('download_warning'):
+            return value
+    return None
+
+
+def save_response_content(response, destination):
+    CHUNK_SIZE = 32768
+    with open(destination, "wb") as f:
+        for chunk in tqdm(response.iter_content(CHUNK_SIZE)):
+            if chunk: # filter out keep-alive new chunks
+                f.write(chunk)
 
 
 def resize_and_save(filename, output_dir, size=SIZE):
@@ -48,10 +80,10 @@ def rename_files():
             )
 
 
-def fetch_original_dataset():
+def fetch_dataset():
     """Fetches prepared Architecture Style dataset and saves it locally as a zip file.
     """
-    pass
+    download_file_from_google_drive(GDRIVE_FILE_ID, GDRIVE_FILE_DEST)
 
 
 def unzip_original_dataset():
@@ -73,7 +105,7 @@ def train_dev_test_split(train=.7, dev=.2, test=.1):
     :param test:  Percentage to use for test set
     :return:
     """
-    arch_style_dirs = [x[0] for x in os.walk(DATA_DIR) if x[0] != 'arc_dataset']
+    arch_style_dirs = [x[0] for x in os.walk(DATA_DIR) if x[0] != '_arc_dataset']
     file_names = []
     for arch_style_dir in arch_style_dirs:
         _, arch_style = arch_style_dir.split("/")
@@ -112,13 +144,16 @@ def train_dev_test_split(train=.7, dev=.2, test=.1):
         for file_name in tqdm(file_names[split]):
             resize_and_save(file_name, output_dir_split, size=SIZE)
 
-    print("Done building dataset")
-
 
 def main():
     random.seed(1729)
-    fetch_original_dataset()
+
+    print("Fetching dataset...")
+    fetch_dataset()
+    print("Got dataset.")
     unzip_original_dataset()
+
+    print("Renaming filenames and doing train/dev/test split...")
     rename_files()
     train_dev_test_split()
     print("Done building dataset.")

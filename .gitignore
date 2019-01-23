@@ -122,5 +122,5 @@ data/arc_dataset
 **/eval_summaries/
 **/last_weights/
 **/train_summaries
-**/metrics_eval_*_weights.json
+**/metrics_*_weights.json
 **/results.md

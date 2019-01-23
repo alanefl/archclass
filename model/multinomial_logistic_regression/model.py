@@ -3,13 +3,8 @@
 import tensorflow as tf
 
 
-def build_multinomial_logistic_regression_model(inputs, params, reuse=False):
+def build_multinomial_logistic_regression_model(inputs, params, reuse=False, is_training=False):
     """Simple softmax logistic regression model.
-
-
-
-    :param inputs:
-    :param params:
     :return: Logits or output distribution of the model.
     """
     with tf.variable_scope('multinomial_logistic_regression', reuse=reuse):

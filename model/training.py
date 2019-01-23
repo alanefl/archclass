@@ -72,7 +72,6 @@ def train_and_evaluate(train_model_spec, eval_model_spec, model_dir, params, res
     with tf.Session() as sess:
         # Initialize model variables
         sess.run(train_model_spec['variable_init_op'])
-        print("RAN INIT OP")
 
         # Reload weights from directory if specified
         if restore_from is not None:

@@ -1,2 +1,20 @@
 """Defines a multinomial logistic regression baseline.
 """
+import tensorflow as tf
+
+
+def build_multinomial_logistic_regression_model(inputs, params, reuse=False):
+    """Simple softmax logistic regression model.
+
+
+
+    :param inputs:
+    :param params:
+    :return: Logits or output distribution of the model.
+    """
+    with tf.variable_scope('multinomial_logistic_regression', reuse=reuse):
+        img_size = params.image_size
+        images = inputs['images']
+        num_labels = params.num_labels
+        assert images.get_shape().as_list() == [None, img_size, img_size, 3]
+        return tf.layers.dense(tf.layers.flatten(images), num_labels)

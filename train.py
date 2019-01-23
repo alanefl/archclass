@@ -10,7 +10,6 @@ Models available:
 import argparse
 import logging
 import os
-import random
 
 import tensorflow as tf
 
@@ -18,13 +17,12 @@ from constants import ARCHITECTURE_STYLES
 from model.input_fn import input_fn
 from model.utils import Params
 from model.utils import set_logger
-from model.utils import save_dict_to_json
 from model.model_fn import model_fn
 from model.training import train_and_evaluate
 
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--model_dir', default='experiments/test',
+parser.add_argument('--model_dir', required=True,
                     help="Experiment directory containing params.json")
 parser.add_argument('--data_dir', default='data/prepared_arc_dataset',
                     help="Directory containing the dataset")
@@ -61,9 +59,9 @@ if __name__ == '__main__':
     params = Params(json_path)
 
     # Check that we are not overwriting some previous experiment
-    # Comment these lines if you are developing your model and don't care about overwritting
+    # Comment these lines if you are developing your model and don't care about overwriting
     model_dir_has_best_weights = os.path.isdir(os.path.join(args.model_dir, "best_weights"))
-    overwritting = model_dir_has_best_weights and args.restore_from is None
+    overwriting = model_dir_has_best_weights and args.restore_from is None
     # assert not overwritting, \
     #     "Weights found in model_dir, aborting to avoid overwrite. If you don't care about \
     #         overwriting, comment me out in the source code."

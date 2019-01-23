@@ -116,3 +116,10 @@ data/**/*.jpg
 data/_arc_dataset
 data/arc_dataset
 
+# Training junk
+*.log
+**/best_weights/
+**/eval_summaries/
+**/last_weights/
+**/train_summaries
+**/metrics_eval_*_weights.json

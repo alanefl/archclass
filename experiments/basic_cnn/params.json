@@ -9,7 +9,7 @@
 
     "image_size": 64,
     "use_random_flip": true,
-    "num_labels": 6,
+    "num_labels": 25,
 
     "num_parallel_calls": 4,
     "save_summary_steps": 1

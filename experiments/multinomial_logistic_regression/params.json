@@ -1,0 +1,11 @@
+{
+    "learning_rate": 1e-2,
+    "batch_size": 32,
+    "num_epochs": 40,
+    "num_parallel_calls": 2,
+    "image_size": 64,
+    "use_random_flip": false,
+    "use_batch_norm": false,
+    "num_labels": 25,
+    "save_summary_steps": 100
+}

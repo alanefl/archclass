@@ -41,7 +41,7 @@ def model_fn(mode, inputs, params, model, reuse=False):
             logits = build_basic_cnn_model(
                 inputs, params, reuse=reuse, is_training=is_training
             )
-        """Add your own model here!"""
+            """Add your own model here!"""
         else:
             raise ValueError("Unsupported model name: %s" % model)
 

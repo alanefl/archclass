@@ -5,6 +5,7 @@ import os
 from subprocess import check_call
 import sys
 
+from constants import MODELS
 from model.utils import Params
 
 
@@ -13,6 +14,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument('--job_name', required=True,
                     help="Name of this exploration")
 parser.add_argument('--model', required=True,
+                    choices=MODELS,
                     help="Name of the model used")
 parser.add_argument('--parent_dir',
                     required=True,
@@ -51,6 +53,12 @@ if __name__ == "__main__":
     json_path = os.path.join(args.parent_dir, 'params.json')
     assert os.path.isfile(json_path), "No json configuration file found at {}".format(json_path)
     params = Params(json_path)
+
+    ########
+    #TODO: more user-friendly way of specifying parameter names and values
+    #TODO: folder structure so we can compare specific parameter tests
+    #TODO: more variety of metrics and plotting them (like confusion matrix, specific misses etc.)
+    ########
 
     # Perform hypersearch over one parameter
     learning_rates = [1e-4, 1e-3, 1e-2]

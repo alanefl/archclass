@@ -152,3 +152,7 @@ ARCHITECTURE_STYLES = [
   }
 ]
 
+MODELS = [
+    "multinomial-logistic-regression",
+    "cnn-baseline",
+]

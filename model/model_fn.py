@@ -4,6 +4,7 @@ import tensorflow as tf
 
 from model.multinomial_logistic_regression.model import build_multinomial_logistic_regression_model
 from model.basic_cnn.model import build_basic_cnn_model
+"""Import your own here!"""
 
 
 def model_fn(mode, inputs, params, model, reuse=False):
@@ -40,6 +41,7 @@ def model_fn(mode, inputs, params, model, reuse=False):
             logits = build_basic_cnn_model(
                 inputs, params, reuse=reuse, is_training=is_training
             )
+        """Add your own model here!"""
         else:
             raise ValueError("Unsupported model name: %s" % model)
 

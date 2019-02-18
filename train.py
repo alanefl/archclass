@@ -3,7 +3,7 @@
 Models available:
     1) Logistic Regression baseline.
     2) Neural network baseline.
-    2) More coming soon.
+    3) Transfer learning with MobileNet V2.
 
 """
 
@@ -29,7 +29,7 @@ parser.add_argument('--data_dir', default='data/prepared_arc_dataset',
 parser.add_argument('--restore_from', default=None,
                     help="Optional, directory or file containing weights to reload before training")
 parser.add_argument('--model',
-                    choices=['multinomial-logistic-regression', 'cnn-baseline'],  # More models coming soon.
+                    choices=['multinomial-logistic-regression', 'cnn-baseline', 'transfer-mobilenetv2-feature-extractor'],  # More models coming soon.
                     help='What model to use.',
                     required=True)
 

@@ -1,5 +1,5 @@
 """Download dataset, Split Architecture Style dataset into train/dev/test,
-and resize images to 64 x 64.
+and resize images to 512 x 512.
 
 
 Resizing:
@@ -15,7 +15,7 @@ import zipfile
 from PIL import Image
 from tqdm import tqdm
 
-SIZE = 128
+SIZE = 512
 ZIP_FILE_NAME = "arc_dataset.zip"
 DATA_DIR = "_arc_dataset"
 OUTPUT_DIR = "prepared_arc_dataset"

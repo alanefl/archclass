@@ -115,6 +115,9 @@ venv.bak/
 data/**/*.jpg
 data/_arc_dataset
 data/arc_dataset
+*.csv
+*.pdf
+*.ps
 
 # Training junk
 *.log
@@ -124,3 +127,4 @@ data/arc_dataset
 **/train_summaries
 **/metrics_*_weights.json
 **/results.md
+experiments/programmer_log.md

@@ -2,6 +2,8 @@
 
 import json
 import logging
+import tensorflow_hub as hub
+
 
 
 class Params():
@@ -28,6 +30,9 @@ class Params():
         with open(json_path) as f:
             params = json.load(f)
             self.__dict__.update(params)
+
+    def add(self, key, value):
+        self.__dict__[key] = value
 
     def __str__(self):
         return str(self.__dict__)
@@ -78,3 +83,10 @@ def save_dict_to_json(d, json_path):
         # We need to convert the values to float for json (it doesn't accept np.array, np.float, )
         d = {k: float(v) for k, v in d.items()}
         json.dump(d, f, indent=4)
+
+
+def install_tf_hub_modules(params, model):
+    """Installs the correct tf hub module in params, for use downstream in model_fn.
+    """
+    if model == "transfer-mobilenetv2-feature-extractor":
+        params.add('tf_hub_module', hub.Module("hub_modules/mobilenet_v2_140_224"));

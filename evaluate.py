@@ -23,7 +23,7 @@ parser.add_argument('--data_dir', default='data/prepared_arc_dataset',
 parser.add_argument('--restore_from', default='best_weights',
                     help="Subdirectory of model dir or file containing the weights")
 parser.add_argument('--model',
-                    choices=['multinomial-logistic-regression', 'nn-baseline'],  # More models coming soon.
+                    choices=['multinomial-logistic-regression', 'cnn-baseline', 'transfer-inceptionv3-feature-extractor'],  # More models coming soon.
                     help='What model to use.',
                     required=True)
 

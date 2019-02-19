@@ -128,3 +128,4 @@ data/arc_dataset
 **/metrics_*_weights.json
 **/results.md
 experiments/programmer_log.md
+hub_modules/*

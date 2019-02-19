@@ -1,5 +1,5 @@
 set term postscript eps enhanced color font "Helvetica,15" size 6,4
-set output "figures/plots/loss_linear_regression.ps"
+set output "figures/plots/milestone/loss_linear_regression.ps"
 
 # We are reading from CSV
 set datafile separator comma
@@ -28,5 +28,5 @@ set style line 8 linecolor rgb '#4363d8' lt 1 linewidth 3 pointtype 6 dashtype 3
 set style line 9 linecolor rgb '#f58231' lt 1 linewidth 3
 
 
-plot "figures/data/multinomial_logistic_regression.csv" using 1:3 with linespoints ls 1 title "Multinomial Logistic Regression | Train", \
-  "figures/data/multinomial_logistic_regression.csv" using 1:5 with linespoints ls 2 title "Multinomial Logistic Regression | Dev", \
+plot "figures/data/milestone/multinomial_logistic_regression.csv" using 1:3 with linespoints ls 1 title "Multinomial Logistic Regression | Train", \
+  "figures/data/milestone/multinomial_logistic_regression.csv" using 1:5 with linespoints ls 2 title "Multinomial Logistic Regression | Dev", \

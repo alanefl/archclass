@@ -1,5 +1,5 @@
 set term postscript eps enhanced color font "Helvetica,15" size 6,4
-set output "figures/plots/loss_basic_cnn.ps"
+set output "figures/plots/milestone/loss_basic_cnn.ps"
 
 # We are reading from CSV
 set datafile separator comma
@@ -29,9 +29,9 @@ set style line 7 linecolor rgb '#4363d8' lt 1 linewidth 3 pointtype 6
 set style line 8 linecolor rgb '#4363d8' lt 1 linewidth 3 pointtype 6 dashtype 3
 set style line 9 linecolor rgb '#f58231' lt 1 linewidth 3
 
-plot "figures/data/basic_cnn_no_regularization.csv" using 1:3 with linespoints ls 3 title "Baseline CNN No Regularization | Train", \
-  "figures/data/basic_cnn_no_regularization.csv" using 1:5 with linespoints ls 4 title "Baseline CNN No Regularization | Dev", \
-  "figures/data/basic_cnn_moderate_dropout.csv" using 1:3 with linespoints ls 5 title "Baseline CNN w/ moderate Dropout | Train", \
-  "figures/data/basic_cnn_moderate_dropout.csv" using 1:5 with linespoints ls 6 title "Baseline CNN w/ moderate Dropout  | Dev", \
-  "figures/data/basic_cnn_heavy_dropout.csv" using 1:3 with linespoints ls 7 title "Baseline CNN w/ heavy Dropout | Train", \
-  "figures/data/basic_cnn_heavy_dropout.csv" using 1:5 with linespoints ls 8 title "Baseline CNN w/ heavy Dropout  | Dev"
+plot "figures/data/milestone/basic_cnn_no_regularization.csv" using 1:3 with linespoints ls 3 title "Baseline CNN No Regularization | Train", \
+  "figures/data/milestone/basic_cnn_no_regularization.csv" using 1:5 with linespoints ls 4 title "Baseline CNN No Regularization | Dev", \
+  "figures/data/milestone/basic_cnn_moderate_dropout.csv" using 1:3 with linespoints ls 5 title "Baseline CNN w/ moderate Dropout | Train", \
+  "figures/data/milestone/basic_cnn_moderate_dropout.csv" using 1:5 with linespoints ls 6 title "Baseline CNN w/ moderate Dropout  | Dev", \
+  "figures/data/milestone/basic_cnn_heavy_dropout.csv" using 1:3 with linespoints ls 7 title "Baseline CNN w/ heavy Dropout | Train", \
+  "figures/data/milestone/basic_cnn_heavy_dropout.csv" using 1:5 with linespoints ls 8 title "Baseline CNN w/ heavy Dropout  | Dev"

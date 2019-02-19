@@ -17,7 +17,7 @@ def get_max_column_val(file_name, col):
     with open(file_name, 'r') as f:
         csv_reader = csv.reader(f, delimiter=',')
         line_count = 0
-        for row in csv_reader:s
+        for row in csv_reader:
             if line_count == 0:
                 line_count += 1
             else:

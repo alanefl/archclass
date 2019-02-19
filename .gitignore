@@ -124,3 +124,5 @@ data/arc_dataset
 **/train_summaries
 **/metrics_*_weights.json
 **/results.md
+
+hub_modules/*

@@ -1,4 +1,16 @@
 
+
+# List of model arguments we can pass in on the command line.
+MODEL_CHOICES = [
+  'multinomial-logistic-regression',
+  'cnn-baseline',
+  'mobilenet_v2_140_224',
+  'inception_v3',
+  'nasnet_large',
+  'inception_resnet_v2',
+  'resnet_v2_152',
+]
+
 ARCHITECTURE_STYLES = [
   {
     "name": "achaemenid",

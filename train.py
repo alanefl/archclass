@@ -14,6 +14,7 @@ import os
 import tensorflow as tf
 
 from constants import ARCHITECTURE_STYLES
+from constants import MODEL_CHOICES
 from model.input_fn import input_fn
 from model.utils import Params
 from model.utils import set_logger
@@ -30,8 +31,8 @@ parser.add_argument('--data_dir', default='data/prepared_arc_dataset',
 parser.add_argument('--restore_from', default=None,
                     help="Optional, directory or file containing weights to reload before training")
 parser.add_argument('--model',
-                    choices=['multinomial-logistic-regression', 'cnn-baseline', 'transfer-mobilenetv2-feature-extractor'],  # More models coming soon.
-                    help='What model to use.',
+                    choices=MODEL_CHOICES,
+                    help='What model to use for training.',
                     required=True)
 
 

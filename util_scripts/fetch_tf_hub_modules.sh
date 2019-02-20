@@ -2,7 +2,6 @@
 
 # We have to do this manually, since my computer won't validate the SSL
 # certifiates of tfhub's .dev TLD.
-cd ..
 
 mkdir -p hub_modules
 
@@ -26,4 +25,3 @@ curl -L "https://tfhub.dev/google/imagenet/nasnet_large/feature_vector/1?tf-hub-
 mkdir -p hub_modules/resnet_v2_152
 curl -L "https://tfhub.dev/google/imagenet/resnet_v2_152/feature_vector/1?tf-hub-format=compressed" | tar -zxvC hub_modules/resnet_v2_152
 
-cd util_scripts

@@ -129,3 +129,6 @@ data/arc_dataset
 **/results.md
 experiments/programmer_log.md
 hub_modules/*
+
+# Ignore hyperparameter searches.
+experiments/**/hp*

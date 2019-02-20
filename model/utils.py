@@ -86,7 +86,20 @@ def save_dict_to_json(d, json_path):
 
 
 def install_tf_hub_modules(params, model):
-    """Installs the correct tf hub module in params, for use downstream in model_fn.
+    """Installs the correct TensorFlow hub module in params, for use downstream in model_fn.
+    Both the name of the model and the module object itself are in the
     """
-    if model == "transfer-mobilenetv2-feature-extractor":
-        params.add('tf_hub_module', hub.Module("hub_modules/mobilenet_v2_140_224"));
+
+    transfer_models = ["mobilenet_v2_140_224", "inception_v3", "nasnet_large", "inception_resnet_v2", "resnet_v2_152"]
+    if model not in transfer_models:
+        return
+
+    d = {
+        "name": model,
+        "module": None
+    }
+
+    for model_name in transfer_models:
+        if model == model_name:
+            d["module"] = hub.Module("hub_modules/%s" % model_name)
+            params.add('tf_hub_module', d)

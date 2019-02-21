@@ -7,6 +7,7 @@ import os
 import tensorflow as tf
 
 from constants import ARCHITECTURE_STYLES
+from constants import MODELS
 from model.input_fn import input_fn
 from model.model_fn import model_fn
 from model.evaluation import evaluate
@@ -23,9 +24,12 @@ parser.add_argument('--data_dir', default='data/prepared_arc_dataset',
 parser.add_argument('--restore_from', default='best_weights',
                     help="Subdirectory of model dir or file containing the weights")
 parser.add_argument('--model',
-                    choices=['multinomial-logistic-regression', 'nn-baseline'],  # More models coming soon.
+                    choices=MODELS,  # More models coming soon.
                     help='What model to use.',
                     required=True)
+parser.add_argument('--mode',
+                    choices=['confusion','bad-images'],  # More models coming soon.
+                    help='What metrics to return.')
 
 
 def extract_labels(filenames):
@@ -77,4 +81,10 @@ if __name__ == '__main__':
     model_spec = model_fn('eval', test_inputs, params, args.model, reuse=False)
 
     logging.info("Starting evaluation")
-    evaluate(model_spec, args.model_dir, params, args.restore_from)
+    print(args.mode)
+    if args.mode == 'confusion':
+        evaluate(model_spec, args.model_dir, params, args.restore_from, find_confusion=True, find_metrics=False)
+    elif args.mode == 'bad-images':
+        evaluate(model_spec, args.model_dir, params, args.restore_from, find_bad_images=True, find_metrics=False)
+    else:
+        evaluate(model_spec, args.model_dir, params, args.restore_from)

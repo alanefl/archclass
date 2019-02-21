@@ -63,6 +63,10 @@ if __name__ == "__main__":
     # Perform hypersearch over one parameter
     learning_rates = [1e-4, 1e-3, 1e-2]
 
+    #random search: load from another JSON?
+    #while-true loop, randomly sample hyperparam values
+    #command line: name of input file
+
     for learning_rate in learning_rates:
         # Modify the relevant parameter in params
         params.learning_rate = learning_rate

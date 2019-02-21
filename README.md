@@ -156,8 +156,27 @@ python synthesize_results.py --parent_dir experiments/my_awesome_model
 
 ## Test Set Evaluation
 
-Finally, to evaluate your model on the test data, run the following. 
+Finally, to evaluate your model on the test data, run the following.
 
 ```bash
 python evaluate.py --model_dir experiments/my_awesome_model --model my-awesome-model
+```
+
+This simply reports accuracy and loss. To display a confusion matrix, which is saved as figure.png,
+as well as other statistics such as class distribution, run this.
+
+```bash
+python evaluate.py --model_dir experiments/my_awesome_model --model my-awesome-model --mode confusion
+```
+
+Finally, to get examples of images which the network misclassified, run this. Note: you will need to clear the test_summaries directory between runs.
+
+```bash
+python evaluate.py --model_dir experiments/my_awesome_model --model my-awesome-model --mode bad-images
+```
+
+Then run this command to display a TensorBoard. You will need to navigate to localhost:6006 to display the page. The images will be under the Images tab.
+
+```bash
+python -m tensorboard.main --logdir=experiments/my_awesome_model/test_summaries
 ```

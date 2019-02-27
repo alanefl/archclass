@@ -100,26 +100,47 @@ def train_dev_test_split(train=.7, dev=.2, test=.1):
     """Creates a random train/dev/test split and installs it
     in the OUTPUT_DIR directory.
 
+    The percentages of train, dev, and test are taken PER CLASS,
+    in order to preserve the distributions of each class in each =
+    of the sets.
+
     :param train: Percentage to use for training set
     :param dev:   Percentage to use for dev set
     :param test:  Percentage to use for test set
     :return:
     """
+    assert((train + dev + test) - 1 < 1E-5)
+
     arch_style_dirs = [x[0] for x in os.walk(DATA_DIR) if x[0] != '_arc_dataset']
-    file_names = []
+
+    file_names_per_label = {}
     for arch_style_dir in arch_style_dirs:
         _, arch_style = arch_style_dir.split("/")
+        file_names_per_label[arch_style] = []
         for file_name in os.listdir(arch_style_dir):
-            file_names.append(os.path.join(DATA_DIR, file_name.split('-')[0], file_name))
+            file_names_per_label[arch_style].append(
+                os.path.join(DATA_DIR, file_name.split('-')[0], file_name)
+            )
 
-    file_names.sort()
-    random.shuffle(file_names)
-    train_split = int(train * len(file_names))
-    dev_split = int((train + dev) * len(file_names))
+    for label in file_names_per_label:
+        random.shuffle(file_names_per_label[label])
 
-    train_file_names = file_names[:train_split]
-    dev_file_names = file_names[train_split: dev_split]
-    test_file_names = file_names[dev_split:]
+    train_file_names = []
+    dev_file_names = []
+    test_file_names = []
+
+    for label in file_names_per_label:
+        random.shuffle(file_names_per_label[label])
+        train_split = int(train * len(file_names_per_label[label]))
+        dev_split = int((train + dev) * len(file_names_per_label[label]))
+
+        train_file_names += file_names_per_label[label][:train_split]
+        dev_file_names += file_names_per_label[label][train_split: dev_split]
+        test_file_names += file_names_per_label[label][dev_split:]
+
+    train_file_names.sort()
+    dev_file_names.sort()
+    test_file_names.sort()
 
     file_names = {
         'train': train_file_names,

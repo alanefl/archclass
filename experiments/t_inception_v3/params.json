@@ -8,7 +8,7 @@
     "bn_momentum": 0.9,
 
     "image_size": 299,
-    "use_random_flip": true,
+    "use_random_flip": false,
     "num_labels": 25,
     "use_single_fc": true,
     "hidden_layer_fc_sizes": [1000, 250],

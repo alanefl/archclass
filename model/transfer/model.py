@@ -40,6 +40,7 @@ def build_transfer_feature_extractor_model(inputs, params, reuse=False, is_train
             out = tf.layers.dense(
                 out,
                 params.hidden_layer_fc_sizes[i],
+                activation=tf.nn.relu,
                 kernel_initializer=xavier_initializer,
                 kernel_regularizer=weights_regularizer
             )

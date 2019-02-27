@@ -55,7 +55,10 @@ if __name__ == "__main__":
 
     # Perform hypersearch here #####################################
 
-    learning_rates = [1e-1, 5e-2, 1e-2, 5e-3, 1e-3, 5e-4, 1e-4]
+    # (This configuration achieved a very high eval set accuracy of ~93.1%). So I'm only tuning around it.
+    # hp__lr=0.001__bs=16__fc=1__l1=0.0__l2=0.0__bn=false__bn_mom=0.9 ###
+
+    learning_rates = [5e-3, 1e-3, 5e-4, 1e-4]
     batch_size = [16, 32, 64, 128, 256]
     number_of_fc_layers = [1, 2, 3, 4]
 
@@ -66,12 +69,12 @@ if __name__ == "__main__":
         4: [1000, 250, 100]
     }
 
-    # Note: more then .01 regularization results in really bad performance.
-    l1_regularization = [0.0, 0.0001, 0.001, 0.01]
-    l2_regularization = [0.0, 0.0001, 0.001, 0.01]
+    # Note: larger L1 constants do pretty bad.
+    l1_regularization = [0.0, 0.000001, 0.00001]
+    l2_regularization = [0.0, 0.00001, 0.0001, 0.001]
 
     batch_norm = [True, False]
-    bn_momentum = [.8, .9, .99, .999]
+    bn_momentum = [.8, .85, .9, .99]
 
     # Tried so far (lr, batch_size, num_fc_layers, l1_reg, l2_reg, batch_norm, bn_momentum)
 

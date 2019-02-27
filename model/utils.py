@@ -101,5 +101,5 @@ def install_tf_hub_modules(params, model):
 
     for model_name in transfer_models:
         if model == model_name:
-            d["module"] = hub.Module("hub_modules/%s" % model_name)
+            d["module"] = hub.Module("hub_modules/%s" % model_name, trainable=params.fine_tune)
             params.add('tf_hub_module', d)

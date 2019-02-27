@@ -1,16 +1,17 @@
 {
-    "learning_rate": 1e-2,
-    "batch_size": 16,
+    "learning_rate": 1e-3,
+    "batch_size": 32,
     "num_epochs": 100,
 
     "num_channels": 16,
     "use_batch_norm": true,
     "bn_momentum": 0.9,
 
-    "image_size": 128,
-    "use_random_flip": false,
+    "image_size": 224,
+    "use_random_flip": true,
     "num_labels": 25,
-    "use_dropout": true,
+    "use_single_fc": true,
+    "hidden_layer_fc_sizes": [1000, 250],
 
     "num_parallel_calls": 4,
     "save_summary_steps": 1

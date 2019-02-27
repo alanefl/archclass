@@ -4,6 +4,7 @@ import tensorflow as tf
 
 from model.multinomial_logistic_regression.model import build_multinomial_logistic_regression_model
 from model.basic_cnn.model import build_basic_cnn_model
+from model.transfer.model import build_transfer_feature_extractor_model
 
 
 def model_fn(mode, inputs, params, model, reuse=False):
@@ -38,6 +39,10 @@ def model_fn(mode, inputs, params, model, reuse=False):
             )
         elif model == "cnn-baseline":
             logits = build_basic_cnn_model(
+                inputs, params, reuse=reuse, is_training=is_training
+            )
+        elif model in ["mobilenet_v2_140_224", "inception_v3", "nasnet_large", "inception_resnet_v2", "resnet_v2_152"]:
+            logits = build_transfer_feature_extractor_model(
                 inputs, params, reuse=reuse, is_training=is_training
             )
         else:

@@ -1,4 +1,4 @@
-"""Peform hyperparemeters search"""
+"""Peform hyperparameters search"""
 
 import argparse
 import os
@@ -6,6 +6,7 @@ from subprocess import check_call
 import sys
 
 from model.utils import Params
+from constants import MODEL_CHOICES
 
 
 PYTHON = sys.executable
@@ -15,9 +16,12 @@ parser.add_argument('--parent_dir',
                     help="Directory containing params.json")
 parser.add_argument('--data_dir', default='data/prepared_arc_dataset',
                     help="Directory containing the dataset")
+parser.add_argument('--model',
+                    choices=MODEL_CHOICES,
+                    help='What model to use for training.',
+                    required=True)
 
-
-def launch_training_job(parent_dir, data_dir, job_name, params):
+def launch_training_job(parent_dir, data_dir, model, job_name, params):
     """Launch training of the model with a set of hyperparameters in parent_dir/job_name
 
     Args:
@@ -35,8 +39,8 @@ def launch_training_job(parent_dir, data_dir, job_name, params):
     params.save(json_path)
 
     # Launch training with this config
-    cmd = "{python} train.py --model_dir {model_dir} --data_dir {data_dir}".format(python=PYTHON,
-            model_dir=model_dir, data_dir=data_dir)
+    cmd = "{python} train.py --model_dir {model_dir} --data_dir {data_dir} --model {model}".format(python=PYTHON,
+            model_dir=model_dir, data_dir=data_dir, model=model)
     print(cmd)
     check_call(cmd, shell=True)
 
@@ -48,13 +52,14 @@ if __name__ == "__main__":
     assert os.path.isfile(json_path), "No json configuration file found at {}".format(json_path)
     params = Params(json_path)
 
-    # Perform hypersearch over one parameter
-    learning_rates = [1e-4, 1e-3, 1e-2]
+    # Perform hypersearch here
 
-    for learning_rate in learning_rates:
+    use_single_fc_choices = [True, False]
+    for fc_choice in use_single_fc_choices:
+
         # Modify the relevant parameter in params
-        params.learning_rate = learning_rate
+        params.use_single_fc = fc_choice
 
         # Launch job (name has to be unique)
-        job_name = "learning_rate_{}".format(learning_rate)
-        launch_training_job(args.parent_dir, args.data_dir, job_name, params)
+        job_name = "hp_use_single_fc_{}".format(str(fc_choice).lower())
+        launch_training_job(args.parent_dir, args.data_dir, args.model, job_name, params)

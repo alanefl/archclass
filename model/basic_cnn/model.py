@@ -29,16 +29,21 @@ def build_basic_cnn_model(inputs, params, reuse=False, is_training=False):
             out = tf.layers.conv2d(out, c, 3, padding='same')
             if params.use_batch_norm:
                 out = tf.layers.batch_normalization(out, momentum=bn_momentum, training=is_training)
+            if params.use_dropout:
+                out = tf.nn.dropout(out, 0.4)
+
             out = tf.nn.relu(out)
             out = tf.layers.max_pooling2d(out, 2, 2)
 
-    assert out.get_shape().as_list() == [None, 4, 4, num_channels * 8]
+    assert out.get_shape().as_list() == [None, 8, 8, num_channels * 8]
 
-    out = tf.reshape(out, [-1, 4 * 4 * num_channels * 8])
+    out = tf.reshape(out, [-1, 8 * 8 * num_channels * 8])
     with tf.variable_scope('fc_1'):
         out = tf.layers.dense(out, num_channels * 8)
         if params.use_batch_norm:
             out = tf.layers.batch_normalization(out, momentum=bn_momentum, training=is_training)
+        if params.use_dropout:
+            out = tf.nn.dropout(out, 0.4)
         out = tf.nn.relu(out)
     with tf.variable_scope('fc_2'):
         logits = tf.layers.dense(out, params.num_labels)

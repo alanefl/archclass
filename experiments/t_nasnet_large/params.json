@@ -7,7 +7,7 @@
     "bn_momentum": 0.9,
 
     "image_size": 331,
-    "use_random_flip": true,
+    "use_random_flip": false,
     "num_labels": 25,
     "num_fc_layers": 1,
     "hidden_layer_fc_sizes": [],
@@ -15,7 +15,6 @@
     "fine_tune": false,
     "l2_regularization": 0.0,
     "l1_regularization": 0.0,
-
 
     "num_parallel_calls": 4,
     "save_summary_steps": 1

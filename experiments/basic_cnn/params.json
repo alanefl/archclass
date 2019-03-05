@@ -7,10 +7,10 @@
     "use_batch_norm": true,
     "bn_momentum": 0.9,
 
-    "image_size": 128,
+    "image_size": 256,
     "use_random_flip": false,
     "num_labels": 25,
-    "use_dropout": true,
+    "use_dropout": false,
 
     "num_parallel_calls": 4,
     "save_summary_steps": 1

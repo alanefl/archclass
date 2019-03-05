@@ -3,15 +3,18 @@
     "batch_size": 32,
     "num_epochs": 100,
 
-    "num_channels": 16,
-    "use_batch_norm": true,
+    "use_batch_norm": false,
     "bn_momentum": 0.9,
 
     "image_size": 299,
-    "use_random_flip": true,
+    "use_random_flip": false,
     "num_labels": 25,
-    "use_single_fc": true,
-    "hidden_layer_fc_sizes": [1000, 250],
+    "num_fc_layers": 1,
+    "hidden_layer_fc_sizes": [],
+
+    "fine_tune": false,
+    "l2_regularization": 0.0,
+    "l1_regularization": 0.0,
 
     "num_parallel_calls": 4,
     "save_summary_steps": 1

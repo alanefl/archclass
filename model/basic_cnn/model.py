@@ -16,7 +16,6 @@ def build_basic_cnn_model(inputs, params, reuse=False, is_training=False):
     images = inputs['images']
 
     assert images.get_shape().as_list() == [None, params.image_size, params.image_size, 3]
-
     out = images
 
     # Define the number of channels of each convolution
@@ -24,6 +23,7 @@ def build_basic_cnn_model(inputs, params, reuse=False, is_training=False):
     num_channels = params.num_channels
     bn_momentum = params.bn_momentum
     channels = [num_channels, num_channels * 2, num_channels * 4, num_channels * 8]
+
     for i, c in enumerate(channels):
         with tf.variable_scope('block_{}'.format(i + 1)):
             out = tf.layers.conv2d(out, c, 3, padding='same')
@@ -37,15 +37,16 @@ def build_basic_cnn_model(inputs, params, reuse=False, is_training=False):
 
     assert out.get_shape().as_list() == [None, 8, 8, num_channels * 8]
 
+    xavier_initializer = tf.contrib.layers.xavier_initializer()
     out = tf.reshape(out, [-1, 8 * 8 * num_channels * 8])
     with tf.variable_scope('fc_1'):
-        out = tf.layers.dense(out, num_channels * 8)
+        out = tf.layers.dense(out, num_channels * 8, kernel_initializer=xavier_initializer)
         if params.use_batch_norm:
             out = tf.layers.batch_normalization(out, momentum=bn_momentum, training=is_training)
         if params.use_dropout:
             out = tf.nn.dropout(out, 0.4)
         out = tf.nn.relu(out)
     with tf.variable_scope('fc_2'):
-        logits = tf.layers.dense(out, params.num_labels)
+        logits = tf.layers.dense(out, params.num_labels, kernel_initializer=xavier_initializer)
 
     return logits

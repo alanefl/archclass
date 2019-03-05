@@ -7,7 +7,7 @@
 # 1. Linear Regression (or what is this called?) w/ Xavier Initalization on its single densely connected layer.
 python train.py --model_dir experiments/multinomial_logistic_regression --model multinomial-logistic-regression
 
-# 2. Basic CNN w/ Xavier Initialization and no dropout
+# 2. Basic CNN w/ Xavier Initialization and no dropout, with image size 256.
 python train.py --model_dir experiments/basic_cnn --model cnn-baseline
 
 # 3. Transfer learning experiments, same params.json, w/ xavier initalization, a single FC layer, and 100 epochs.

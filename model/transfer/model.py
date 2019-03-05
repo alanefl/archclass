@@ -10,6 +10,7 @@ Pretrained hub modules are inserted into the params in `train.py`.
 import tensorflow as tf
 import tensorflow_hub as hub
 
+
 def build_transfer_feature_extractor_model(inputs, params, reuse=False, is_training=False):
     """Using a pretrained architecture as a feature extractor, then use one or two
     fully connected layers to generate logits.

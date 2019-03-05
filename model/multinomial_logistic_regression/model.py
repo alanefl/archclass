@@ -11,5 +11,6 @@ def build_multinomial_logistic_regression_model(inputs, params, reuse=False, is_
         img_size = params.image_size
         images = inputs['images']
         num_labels = params.num_labels
+        xavier_initializer = tf.contrib.layers.xavier_initializer()
         assert images.get_shape().as_list() == [None, img_size, img_size, 3]
-        return tf.layers.dense(tf.layers.flatten(images), num_labels)
+        return tf.layers.dense(tf.layers.flatten(images), num_labels, kernel_initializer=xavier_initializer)

@@ -193,7 +193,7 @@ def main():
     # rename_files()
 
     # Split into dev and test
-    train_dev_test_split(OUTPUT_DIR)
+    train_dev_test_split()
     print("Done building dataset.")
 
 

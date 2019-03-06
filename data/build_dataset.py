@@ -16,11 +16,11 @@ from PIL import Image
 from tqdm import tqdm
 
 SIZE = 512
-ZIP_FILE_NAME = "arc_dataset.zip"
+ZIP_FILE_NAME = "_arc_dataset.zip"
 DATA_DIR = "_arc_dataset"
-OUTPUT_DIR = "prepared_arc_dataset"
+RESIZED_OUTPUT_DIR = "prepared_arc_dataset"
+OUTPUT_DIR = "prepared_arc_dataset_not_resized"
 GDRIVE_FILE_ID = '1fJfclq0ULmSX_E6g6qeO2Ff0DtcUW1eh'
-GDRIVE_FILE_DEST = 'arc_dataset.zip'
 
 
 def download_file_from_google_drive(id, destination):
@@ -53,21 +53,24 @@ def save_response_content(response, destination):
                 f.write(chunk)
 
 
-def resize_and_save(filename, output_dir, size=SIZE):
+def resize_and_save(filename, output_dir, should_resize=False, size=SIZE):
     """Resize the image contained in `filename` and save it to the `output_dir`
     """
     image = Image.open(filename)
 
     # Use bilinear interpolation instead of the default "nearest neighbor" method
-    image = image.resize((size, size), Image.BILINEAR)
+    if (should_resize):
+        image = image.resize((size, size), Image.BILINEAR)
     image.save(os.path.join(output_dir, filename.split('/')[-1]))
 
 
 def rename_files():
     """Rename image files to the following convention:
           [architecture style]-[id].jpg
+
+    NOTE: this function is not needed since the data on GDrive is already renamed.
     """
-    arch_style_dirs = [x[0] for x in os.walk('arcDataset') if x[0] != 'arcDataset']
+    arch_style_dirs = [x[0] for x in os.walk(DATA_DIR) if x[0] != DATA_DIR]
     for arch_style_dir in arch_style_dirs:
         _, arch_style = arch_style_dir.split("/")
         ctr = 0
@@ -83,7 +86,7 @@ def rename_files():
 def fetch_dataset():
     """Fetches prepared Architecture Style dataset and saves it locally as a zip file.
     """
-    download_file_from_google_drive(GDRIVE_FILE_ID, GDRIVE_FILE_DEST)
+    download_file_from_google_drive(GDRIVE_FILE_ID, ZIP_FILE_NAME)
 
 
 def unzip_original_dataset():
@@ -111,7 +114,7 @@ def train_dev_test_split(train=.7, dev=.2, test=.1):
     """
     assert((train + dev + test) - 1 < 1E-5)
 
-    arch_style_dirs = [x[0] for x in os.walk(DATA_DIR) if x[0] != '_arc_dataset']
+    arch_style_dirs = [x[0] for x in os.walk(DATA_DIR) if x[0] != DATA_DIR]
 
     file_names_per_label = {}
     for arch_style_dir in arch_style_dirs:
@@ -148,22 +151,34 @@ def train_dev_test_split(train=.7, dev=.2, test=.1):
         'test': test_file_names
     }
 
-    if not os.path.exists(OUTPUT_DIR):
-        os.mkdir(OUTPUT_DIR)
-    else:
-        print("Warning: output dir {} already exists".format(OUTPUT_DIR))
+    # These datasets must be distinct.
+    for file_name in file_names['train']:
+        assert(file_name not in file_names['dev'] and file_name not in file_names['test'])
 
-    # Split into train, dev, and test
-    for split in ['train', 'dev', 'test']:
-        output_dir_split = os.path.join(OUTPUT_DIR, '{}'.format(split))
-        if not os.path.exists(output_dir_split):
-            os.mkdir(output_dir_split)
+    for file_name in file_names['dev']:
+        assert(file_name not in file_names['train'] and file_name not in file_names['test'])
+
+    for file_name in file_names['test']:
+        assert(file_name not in file_names['dev'] and file_name not in file_names['train'])
+
+    for should_resize, output_dir in [(True, RESIZED_OUTPUT_DIR), (False, OUTPUT_DIR)]:
+
+        if not os.path.exists(output_dir):
+            os.mkdir(output_dir)
         else:
-            print("Warning: dir {} already exists".format(output_dir_split))
+            print("Warning: output dir {} already exists".format(output_dir))
 
-        print("Processing {} data, saving preprocessed data to {}".format(split, output_dir_split))
-        for file_name in tqdm(file_names[split]):
-            resize_and_save(file_name, output_dir_split, size=SIZE)
+        # Split into train, dev, and test
+        for split in ['train', 'dev', 'test']:
+            output_dir_split = os.path.join(output_dir, '{}'.format(split))
+            if not os.path.exists(output_dir_split):
+                os.mkdir(output_dir_split)
+            else:
+                print("Warning: dir {} already exists".format(output_dir_split))
+
+            print("Processing {} data, saving preprocessed data to {}".format(split, output_dir_split))
+            for file_name in tqdm(file_names[split]):
+                resize_and_save(file_name, output_dir_split, should_resize=should_resize, size=SIZE)
 
 
 def main():
@@ -174,9 +189,11 @@ def main():
     print("Got dataset.")
     unzip_original_dataset()
 
-    print("Renaming filenames and doing train/dev/test split...")
-    rename_files()
-    train_dev_test_split()
+    # print("Renaming filenames and doing train/dev/test split...")
+    # rename_files()
+
+    # Split into dev and test
+    train_dev_test_split(OUTPUT_DIR)
     print("Done building dataset.")
 
 

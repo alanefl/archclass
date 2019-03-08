@@ -1,6 +1,7 @@
 """Define the model."""
 
 import tensorflow as tf
+import tf_metrics
 
 from model.multinomial_logistic_regression.model import build_multinomial_logistic_regression_model
 from model.basic_cnn.model import build_basic_cnn_model
@@ -66,14 +67,33 @@ def model_fn(mode, inputs, params, model, reuse=False):
     # -----------------------------------------------------------
     # METRICS AND SUMMARIES
     # Metrics for evaluation using tf.metrics (average over whole dataset)
+
     with tf.variable_scope("metrics"):
+        average = 'weighted'
+
+        #class_count = tf.bincount(tf.cast(labels, tf.int32))
         confusion = tf.confusion_matrix(labels=labels, predictions=tf.argmax(logits, 1), num_classes=25)
+        #precision_vec = [tf.metrics.precision_at_k(labels=labels, predictions=logits, k=1, class_id = _i) for _i in range(25)]
+        #precision = tf.divide(tf.multiply(class_count, precision_vec), tf.reduce_sum(class_count))
+        #recall_vec = [tf.metrics.recall_at_k(labels=labels, predictions=logits, k=1, class_id = _i) for _i in range(25)]
+        #recall = tf.divide(tf.multiply(class_count, recall_vec), tf.reduce_sum(class_count))
+        #f1 = tf.divide(tf.multiply(tf.cast(2.0, tf.float64), tf.multiply(precision, recall)), tf.add(precision, recall))
         metrics = {
             'accuracy': tf.metrics.accuracy(labels=labels, predictions=tf.argmax(logits, 1)),
             'loss': tf.metrics.mean(loss),
+            'precision': tf_metrics.precision(labels, tf.argmax(logits, 1), num_classes=25, average=average),
+            'recall': tf_metrics.recall(labels, tf.argmax(logits, 1), num_classes=25, average=average),
+            'f1': tf_metrics.f1(labels, tf.argmax(logits, 1), num_classes=25, average=average),
         }
 
     # Group the update ops for the tf.metrics
+    #operation_list = []
+    #for scalar_metric_name in ['accuracy','loss']:
+        #tf.map_fn(lambda x: operation_list.append(x[1]), metrics[scalar_metric_name])
+        #operation_list.append(metrics[scalar_metric_name][1])
+    #for single_metric_name in ['precision', 'recall', 'f1']:
+        #operation_list.append(metrics[single_metric_name])
+    #update_metrics_op = tf.group(*operation_list)
     update_metrics_op = tf.group(*[op for _, op in metrics.values()])
 
     # Get the op to reset the local variables used in tf.metrics

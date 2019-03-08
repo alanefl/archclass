@@ -28,7 +28,7 @@ parser.add_argument('--model',
                     help='What model to use.',
                     required=True)
 parser.add_argument('--mode',
-                    choices=['confusion','bad-images'],  # More models coming soon.
+                    choices=['confusion','bad-images'], 
                     help='What metrics to return.')
 
 

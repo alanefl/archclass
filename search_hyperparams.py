@@ -71,8 +71,8 @@ if __name__ == "__main__":
 
     # Note: larger L1 constants do pretty bad.
     l1_regularization = [0.0, 0.00001, 0.0001]
-    l2_regularization = [0.0001, 0.001, 0.01, 0.04, 0.06, 0.08]
-    dropout = [0.99, 0.95, 0.9, 0.8, 0.7, 0.6, 0.5]
+    l2_regularization = [0.0, 0.001, 0.01, 0.04, 0.06, 0.08]
+    dropout = [0.95, 0.9, 0.8, 0.7, 0.6, 0.5]
 
     batch_norm = [True, False]
     bn_momentum = [.9]

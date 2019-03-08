@@ -48,10 +48,8 @@ def build_transfer_feature_extractor_model(inputs, params, reuse=False, is_train
             if params.use_batch_norm:
                 out = tf.layers.batch_normalization(out, momentum=bn_momentum, training=is_training)
 
-            out = tf.nn.relu(out)
-
-            if params.dropout > 0.0001:
-                out = tf.nn.dropout(out, params.dropout)
+            if params.dropout_keep_prob < 1:
+                out = tf.nn.dropout(out, params.dropout_keep_prob)
 
         # Final FC layer that outputs labels.
         return tf.layers.dense(

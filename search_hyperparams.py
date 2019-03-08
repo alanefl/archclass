@@ -56,7 +56,8 @@ if __name__ == "__main__":
     # Perform hypersearch here #####################################
 
     # Configurations that worked well: not .01 L2 regulariation, larger  learning rates,
-    #  smaller batch sizes, and L2 regularization pretty high but that does not reach 0.1.
+    #  smaller batch sizes, and L2 regularization pretty high but that does not reach 0.1. Momentum doesn't seem
+    # to be affecting things too much.
     learning_rates = [5e-3, 1e-3]
     batch_size = [32, 64, 128, 256]
     number_of_fc_layers = [1, 2, 3, 4]
@@ -69,13 +70,16 @@ if __name__ == "__main__":
     }
 
     # Note: larger L1 constants do pretty bad.
-    l1_regularization = [0.0, 0.000001, 0.00001, 0.001]
-    l2_regularization = [0.0, 0.001, 0.01, 0.04, 0.06, 0.08]
+    l1_regularization = [0.0, 0.00001, 0.0001]
+    l2_regularization = [0.0001, 0.001, 0.01, 0.04, 0.06, 0.08]
+    dropout = [0.99, 0.95, 0.8, 0.7, 0.6, 0.5]
 
     batch_norm = [True, False]
     bn_momentum = [.9]
 
     # Tried so far (lr, batch_size, num_fc_layers, l1_reg, l2_reg, batch_norm, bn_momentum)
+
+    # Tried on week 9 (dropout)
 
     tried_so_far = set()
 
@@ -87,6 +91,7 @@ if __name__ == "__main__":
         num_fc = random.choice(number_of_fc_layers)
         l1_reg = random.choice(l1_regularization)
         l2_reg = random.choice(l2_regularization)
+        dropout_keep_prob = random.choice(dropout)
         use_batch_norm = random.choice(batch_norm)
         bn_mom = random.choice(bn_momentum)
         params_to_try = (lr, bs, num_fc, l1_reg, l2_reg, use_batch_norm, bn_mom)
@@ -102,16 +107,18 @@ if __name__ == "__main__":
         params.hidden_layer_fc_sizes = fc_layers_intermediate_sizes[num_fc]
         params.l1_regularization = l1_reg
         params.l2_regularization = l2_reg
+        params.dropout_keep_prob = dropout_keep_prob
         params.use_batch_norm = use_batch_norm
         params.bn_momentum = bn_mom
 
         # Launch job (name has to be unique)
-        job_name = "hp__lr={}__bs={}__fc={}__l1={}__l2={}__bn={}__bn_mom={}".format(
+        job_name = "hp__lr={}__bs={}__fc={}__l1={}__l2={}__dp={}__bn={}__bn_mom={}".format(
             str(lr).lower(),
             str(bs).lower(),
             str(num_fc).lower(),
             str(l1_reg).lower(),
             str(l2_reg).lower(),
+            str(dropout_keep_prob).lower(),
             str(use_batch_norm).lower(),
             str(bn_mom).lower(),
         )

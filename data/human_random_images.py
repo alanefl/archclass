@@ -13,6 +13,7 @@ def main():
     file_names = os.listdir(IMAGE_DIR_NAME + '/dev')
     file_names.sort()
     random.shuffle(file_names)
+    print(file_names[0:25])
     i = 1
     for file_name in file_names[0:25]:
         shutil.copyfile(

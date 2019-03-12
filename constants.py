@@ -161,6 +161,12 @@ ARCHITECTURE_STYLES = [
     "id": 24,
     "start_year": 1900,
     "end_year": 1920
+  },
+  {
+    "name": "no_architecture",
+    "id": 25,
+    "start_year": 0,
+    "end_year": 0
   }
 ]
 

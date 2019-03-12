@@ -83,7 +83,7 @@ if __name__ == '__main__':
     dev_filenames = [os.path.join(dev_data_dir, f) for f in os.listdir(dev_data_dir)
                       if f.endswith('.jpg')]
 
-    # # Labels will be between 0 and 24 included (25 classes in total)
+    # # Labels will be between 0 and 25 included (26 classes in total)
     train_labels, dev_labels = extract_labels(train_filenames), extract_labels(dev_filenames)
 
     # Specify the sizes of the dataset we train on and evaluate on

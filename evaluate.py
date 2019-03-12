@@ -30,6 +30,9 @@ parser.add_argument('--model',
 parser.add_argument('--mode',
                     choices=['confusion','bad-images','per-class'],
                     help='What metrics to return.')
+parser.add_argument('--data_sub', default='test',
+                    choices=['train','dev','test'],
+                    help='Evaluate on train, dev, or test data.')
 
 
 def extract_labels(filenames):
@@ -62,7 +65,8 @@ if __name__ == '__main__':
     # Create the input data pipeline
     logging.info("Creating the dataset...")
     data_dir = args.data_dir
-    test_data_dir = os.path.join(data_dir, "test")
+    data_dir_type = args.data_sub
+    test_data_dir = os.path.join(data_dir, data_dir_type)
 
     # Get the filenames from the test set
     test_filenames = os.listdir(test_data_dir)

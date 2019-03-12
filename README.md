@@ -167,6 +167,9 @@ Finally, to evaluate your model on the test data, run the following.
 python evaluate.py --model_dir experiments/my_awesome_model --model my-awesome-model
 ```
 
+You can use the `--data_sub` flag with `train`, `dev`, or `test` to specify which dataset to run evaluation on.
+Default is test.
+
 This simply reports loss, average accuracy, average precision, recall, and F1 scores (using weighted averages). However, you can display per-class metrics by running the following:
 
 ```bash

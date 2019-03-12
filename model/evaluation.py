@@ -86,9 +86,13 @@ def evaluate_sess(sess, model_spec, num_steps, writer=None, params=None, find_co
         plt.savefig("figure.png")
 
     if find_perclass_metrics:
+        print("Accuracy:")
         print(accuracy_vec)
+        print("Precision:")
         print(precision_vec)
+        print("Recall:")
         print(recall_vec)
+        print("F1:")
         print(f1_vec)
 
 

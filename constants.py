@@ -170,9 +170,4 @@ ARCHITECTURE_STYLES = [
   }
 ]
 
-MODELS = [
-    "multinomial-logistic-regression",
-    "cnn-baseline",
-]
-
-NUM_CLASSES = 25
+NUM_CLASSES = 26

@@ -156,3 +156,5 @@ MODELS = [
     "multinomial-logistic-regression",
     "cnn-baseline",
 ]
+
+NUM_CLASSES = 25

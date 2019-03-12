@@ -7,6 +7,7 @@ from tqdm import trange
 import tensorflow as tf
 
 from model.utils import save_dict_to_json
+from constants import NUM_CLASSES
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -33,8 +34,8 @@ def evaluate_sess(sess, model_spec, num_steps, writer=None, params=None, find_co
     sess.run(model_spec['iterator_init_op'])
     sess.run(model_spec['metrics_init_op'])
 
-    confusion = model_spec['confusion'] #comment
-    confusion_matrix = np.zeros((25,25)) #comment
+    confusion = model_spec['confusion']
+    confusion_matrix = np.zeros((NUM_CLASSES,NUM_CLASSES))
 
     accuracy_vec = model_spec['accuracy_vec']
     precision_vec = model_spec['precision_vec']

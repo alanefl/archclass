@@ -3,6 +3,8 @@
 import tensorflow as tf
 import tf_metrics
 
+from constants import NUM_CLASSES
+
 from model.multinomial_logistic_regression.model import build_multinomial_logistic_regression_model
 from model.basic_cnn.model import build_basic_cnn_model
 """Import your own here!"""
@@ -68,7 +70,7 @@ def model_fn(mode, inputs, params, model, reuse=False):
     # Metrics for evaluation using tf.metrics (average over whole dataset)
 
     with tf.variable_scope("metrics"):
-        num_classes = 25 #TODO: pass this in as a parameter
+        num_classes = NUM_CLASSES
         average = 'weighted'
         class_count = tf.bincount(tf.cast(labels, tf.int32))
         confusion = tf.confusion_matrix(labels=labels, predictions=tf.argmax(logits, 1), num_classes=num_classes)

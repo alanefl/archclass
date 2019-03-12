@@ -28,7 +28,7 @@ parser.add_argument('--model',
                     help='What model to use.',
                     required=True)
 parser.add_argument('--mode',
-                    choices=['confusion','bad-images'], 
+                    choices=['confusion','bad-images','per-class'],
                     help='What metrics to return.')
 
 
@@ -86,5 +86,7 @@ if __name__ == '__main__':
         evaluate(model_spec, args.model_dir, params, args.restore_from, find_confusion=True, find_metrics=False)
     elif args.mode == 'bad-images':
         evaluate(model_spec, args.model_dir, params, args.restore_from, find_bad_images=True, find_metrics=False)
+    elif args.mode == 'per-class':
+        evaluate(model_spec, args.model_dir, params, args.restore_from, find_metrics=False, find_perclass_metrics=True)
     else:
         evaluate(model_spec, args.model_dir, params, args.restore_from)

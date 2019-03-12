@@ -180,3 +180,5 @@ Then run this command to display a TensorBoard. You will need to navigate to loc
 ```bash
 python -m tensorboard.main --logdir=experiments/my_awesome_model/test_summaries
 ```
+
+TODO: import tf_metrics explanation

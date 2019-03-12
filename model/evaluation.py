@@ -11,7 +11,7 @@ from model.utils import save_dict_to_json
 import numpy as np
 import matplotlib.pyplot as plt
 
-def evaluate_sess(sess, model_spec, num_steps, writer=None, params=None, find_confusion=False, find_bad_images=False, find_metrics=True):
+def evaluate_sess(sess, model_spec, num_steps, writer=None, params=None, find_confusion=False, find_bad_images=False, find_metrics=True, find_perclass_metrics=False):
     """Train the model on `num_steps` batches.
 
     Args:
@@ -36,6 +36,11 @@ def evaluate_sess(sess, model_spec, num_steps, writer=None, params=None, find_co
     confusion = model_spec['confusion'] #comment
     confusion_matrix = np.zeros((25,25)) #comment
 
+    accuracy_vec = model_spec['accuracy_vec']
+    precision_vec = model_spec['precision_vec']
+    recall_vec = model_spec['recall_vec']
+    f1_vec = model_spec['f1_vec']
+
     if find_bad_images:
         writer = tf.summary.FileWriter(os.path.join('experiments/basic_cnn_no_dropout', 'test_summaries'), sess.graph)
 
@@ -49,6 +54,11 @@ def evaluate_sess(sess, model_spec, num_steps, writer=None, params=None, find_co
         if find_bad_images:
             _, summ = sess.run([bad_image, summary_op])
             writer.add_summary(summ)
+        if find_perclass_metrics:
+            accuracy_vec = tf.convert_to_tensor(accuracy_vec).eval(session=sess)
+            precision_vec = tf.convert_to_tensor(precision_vec).eval(session=sess)
+            recall_vec = tf.convert_to_tensor(recall_vec).eval(session=sess)
+            f1_vec = tf.convert_to_tensor(f1_vec).eval(session=sess)
     if find_confusion:
         print(confusion_matrix)
         print('Total: {}'.format(np.sum(confusion_matrix)))
@@ -75,8 +85,14 @@ def evaluate_sess(sess, model_spec, num_steps, writer=None, params=None, find_co
         ax.matshow(intersection_matrix, cmap=plt.cm.Blues)
         plt.savefig("figure.png")
 
+    if find_perclass_metrics:
+        print(accuracy_vec)
+        print(precision_vec)
+        print(recall_vec)
+        print(f1_vec)
 
-def evaluate(model_spec, model_dir, params, restore_from, find_confusion=False, find_bad_images=False, find_metrics=True):
+
+def evaluate(model_spec, model_dir, params, restore_from, find_confusion=False, find_bad_images=False, find_metrics=True, find_perclass_metrics=False):
     """Evaluate the model
 
     Args:
@@ -102,9 +118,9 @@ def evaluate(model_spec, model_dir, params, restore_from, find_confusion=False, 
         # Evaluate
         num_steps = (params.eval_size + params.batch_size - 1) // params.batch_size
         if find_metrics:
-            metrics = evaluate_sess(sess, model_spec, num_steps, find_confusion=find_confusion, find_bad_images=find_bad_images, find_metrics=find_metrics)
+            metrics = evaluate_sess(sess, model_spec, num_steps, find_confusion=find_confusion, find_bad_images=find_bad_images, find_metrics=find_metrics, find_perclass_metrics=find_perclass_metrics)
             metrics_name = '_'.join(restore_from.split('/'))
             save_path = os.path.join(model_dir, "metrics_test_{}.json".format(metrics_name))
             save_dict_to_json(metrics, save_path)
         else:
-            evaluate_sess(sess, model_spec, num_steps, find_confusion=find_confusion, find_bad_images=find_bad_images, find_metrics=find_metrics)
+            evaluate_sess(sess, model_spec, num_steps, find_confusion=find_confusion, find_bad_images=find_bad_images, find_metrics=find_metrics, find_perclass_metrics=find_perclass_metrics)

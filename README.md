@@ -140,7 +140,7 @@ and won't be registered with or pushed to GitHub.
 
 ## Training On GPU
 
-Coming soon.  We still need to get our AWS credits for this part.
+Description coming soon.
 
 ## Hyperparameter Search
 

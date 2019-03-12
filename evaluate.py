@@ -7,7 +7,7 @@ import os
 import tensorflow as tf
 
 from constants import ARCHITECTURE_STYLES
-from constants import MODELS
+from constants import MODEL_CHOICES
 from model.input_fn import input_fn
 from model.model_fn import model_fn
 from model.evaluation import evaluate
@@ -24,7 +24,7 @@ parser.add_argument('--data_dir', default='data/prepared_arc_dataset',
 parser.add_argument('--restore_from', default='best_weights',
                     help="Subdirectory of model dir or file containing the weights")
 parser.add_argument('--model',
-                    choices=MODELS,  # More models coming soon.
+                    choices=MODEL_CHOICES,  # More models coming soon.
                     help='What model to use.',
                     required=True)
 parser.add_argument('--mode',

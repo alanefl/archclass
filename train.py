@@ -3,7 +3,7 @@
 Models available:
     1) Logistic Regression baseline.
     2) Neural network baseline.
-    2) More coming soon.
+    3) Transfer learning with MobileNet V2.
 
 """
 
@@ -14,10 +14,11 @@ import os
 import tensorflow as tf
 
 from constants import ARCHITECTURE_STYLES
-from constants import MODELS
+from constants import MODEL_CHOICES
 from model.input_fn import input_fn
 from model.utils import Params
 from model.utils import set_logger
+from model.utils import install_tf_hub_modules
 from model.model_fn import model_fn
 from model.training import train_and_evaluate
 
@@ -30,8 +31,8 @@ parser.add_argument('--data_dir', default='data/prepared_arc_dataset',
 parser.add_argument('--restore_from', default=None,
                     help="Optional, directory or file containing weights to reload before training")
 parser.add_argument('--model',
-                    choices=MODELS,  # More models coming soon.
-                    help='What model to use.',
+                    choices=MODEL_CHOICES,
+                    help='What model to use for training.',
                     required=True)
 
 
@@ -82,7 +83,7 @@ if __name__ == '__main__':
     dev_filenames = [os.path.join(dev_data_dir, f) for f in os.listdir(dev_data_dir)
                       if f.endswith('.jpg')]
 
-    # # Labels will be between 0 and 5 included (6 classes in total)
+    # # Labels will be between 0 and 25 included (26 classes in total)
     train_labels, dev_labels = extract_labels(train_filenames), extract_labels(dev_filenames)
 
     # Specify the sizes of the dataset we train on and evaluate on
@@ -92,6 +93,9 @@ if __name__ == '__main__':
     # Create the two iterators over the two datasets
     train_inputs = input_fn(True, train_filenames, train_labels, params)
     eval_inputs = input_fn(False, dev_filenames, dev_labels, params)
+
+    # Install any external TF Hub module we may need
+    install_tf_hub_modules(params, args.model)
 
     # Define the model
     logging.info("Creating the model...")

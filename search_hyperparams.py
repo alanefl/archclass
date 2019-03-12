@@ -6,12 +6,18 @@ from subprocess import check_call
 import sys
 import random
 
+from constants import MODELS
 from model.utils import Params
 from constants import MODEL_CHOICES
 
 
 PYTHON = sys.executable
 parser = argparse.ArgumentParser()
+parser.add_argument('--job_name', required=True,
+                    help="Name of this exploration")
+parser.add_argument('--model', required=True,
+                    choices=MODELS,
+                    help="Name of the model used")
 parser.add_argument('--parent_dir',
                     required=True,
                     help="Directory containing params.json")

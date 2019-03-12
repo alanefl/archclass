@@ -7,59 +7,6 @@ from model.multinomial_logistic_regression.model import build_multinomial_logist
 from model.basic_cnn.model import build_basic_cnn_model
 """Import your own here!"""
 
-"""def accuracy_body(_i, accuracy_vec, labels, predictions):
-    labels_i = tf.equal(labels, _i)
-    predictions_i = tf.equal(predictions, _i)
-    correct = tf.reduce_sum(tf.cast(tf.equal(labels_i, predictions_i), tf.float32))
-    accuracy_vec = accuracy_vec.write(_i, tf.divide(correct, tf.cast(tf.shape(labels_i)[0], dtype=tf.float32)))
-
-def find_accuracy(labels, predictions):
-    i0 = tf.constant(0)
-    accuracy_vec = tf.TensorArray(size=25, dtype=tf.float32)
-    _, accuracy_vec, _, _ = tf.while_loop(
-        cond= lambda i, a, l, p: i < 25,
-        body=accuracy_body,
-        loop_vars=[i0, accuracy_vec, labels, predictions],
-        shape_invariants=[i0.get_shape(), tf.TensorShape(None), labels.get_shape(), predictions.get_shape()]
-    )
-    accuracy_vec = []
-    for _i in range(25):
-        labels_i = tf.equal(labels, _i)
-        predictions_i = tf.equal(predictions, _i)
-        correct = tf.reduce_sum(tf.cast(tf.equal(labels_i, predictions_i), tf.float32))
-        accuracy_vec.append(tf.divide(correct, tf.shape(labels_i)[0]))
-    return accuracy_vec.concat()
-    #accuracy_vec = [tf.metrics.accuracy(labels=tf.boolean_mask(labels, labels == _i), predictions=tf.boolean_mask(tf.argmax(logits, 1), labels == _i)) for _i in range(25)]
-
-def find_precision(labels, predictions):
-    precision_vec = []
-    for _i in range(25):
-        labels_i = tf.equal(labels, _i)
-        predictions_i = tf.equal(predictions, _i)
-        tp = tf.reduce_sum(tf.cast(tf.equal(tf.equal(labels_i, predictions_i),True), tf.float32))
-        positives = tf.reduce_sum(tf.cast(predictions_i, tf.float32))
-        precision_vec.append(tf.divide(tp, positives))
-    return precision_vec
-
-def find_recall(labels, predictions):
-    recall_vec = []
-    for _i in range(25):
-        labels_i = tf.equal(labels, _i)
-        predictions_i = tf.equal(predictions, _i)
-        tp = tf.reduce_sum(tf.cast(tf.equal(tf.equal(labels_i, predictions_i),True), tf.float32))
-        actually_yes = tf.reduce_sum(tf.cast(labels_i, tf.float32))
-        recall_vec.append(tf.divide(tp, actually_yes))
-    return recall_vec
-
-def find_precision(labels, predictions):
-    precision_vec = []
-    for _i in range(25):
-        labels_i = tf.boolean_mask(labels, labels == _i)
-        predictions_i = tf.boolean_mask(predictions, labels == _i)
-        tp =
-        positives =
-        precision_vec.append(tf.divide(tp, positives))"""
-
 def model_fn(mode, inputs, params, model, reuse=False):
     """Model function defining the graph operations.
 
@@ -124,7 +71,6 @@ def model_fn(mode, inputs, params, model, reuse=False):
         num_classes = 25 #TODO: pass this in as a parameter
         average = 'weighted'
         class_count = tf.bincount(tf.cast(labels, tf.int32))
-        #num_classes = tf.add(tf.reduce_max(tf.cast(labels, tf.int32)),tf.constant(1))
         confusion = tf.confusion_matrix(labels=labels, predictions=tf.argmax(logits, 1), num_classes=num_classes)
 
         labels_oh = tf.one_hot(labels, num_classes, dtype=tf.int32)
@@ -156,18 +102,6 @@ def model_fn(mode, inputs, params, model, reuse=False):
         precision_vec = tf.divide(tp_count, predicted_pos)
         recall_vec = tf.divide(tp_count, tf.add(tp_count, fn_count))
         f1_vec = tf.divide(tf.multiply(tf.constant(2.0),tf.multiply(precision_vec, recall_vec)), tf.add(precision_vec, recall_vec))
-
-        #accuracy_vec = [tf.metrics.accuracy(labels=tf.boolean_mask(labels, labels == _i), predictions=tf.boolean_mask(tf.argmax(logits, 1), labels == _i)) for _i in range(25)]
-        #accuracy_vec = find_accuracy(tf.cast(labels, tf.int32), tf.cast(tf.argmax(logits, 1), tf.int32))
-        #precision_vec = find_precision(labels, tf.argmax(logits, 1))
-        #precision_vec = [tf.metrics.precision_at_k(labels=labels, predictions=logits, k=1, class_id = _i) for _i in range(25)]
-        #precision = tf.divide(tf.multiply(class_count, precision_vec), tf.reduce_sum(class_count))
-        #recall_vec = find_recall(labels, tf.argmax(logits, 1))
-        #recall_vec = [tf.metrics.recall_at_k(labels=labels, predictions=logits, k=1, class_id = _i) for _i in range(25)]
-        #recall = tf.divide(tf.multiply(class_count, recall_vec), tf.reduce_sum(class_count))
-        #f1_vec = tf.divide(tf.multiply(tf.cast(2.0, tf.float64), tf.multiply(precision_vec, recall_vec)), tf.add(precision_vec, recall_vec))
-        #f1_vec = tf.divide(tf.multiply(tf.cast(2.0, tf.float64), tf.multiply(precision_vec, recall_vec)), tf.add(precision, recall))
-        #f1 = tf.divide(tf.multiply(tf.cast(2.0, tf.float64), tf.multiply(precision, recall)), tf.add(precision, recall))
         metrics = {
             'accuracy': tf.metrics.accuracy(labels=labels, predictions=tf.argmax(logits, 1)),
             'loss': tf.metrics.mean(loss),

@@ -2,6 +2,11 @@
 
 This is a project by Paavani Dua, Alan Flores-Lopez, and Alex Wade for Stanford's CS230 (Deep Learning) class.
 
+Make sure to import the tf_metrics library:
+```bash
+pip install git+https://github.com/guillaumegenthial/tf_metrics.git
+```
+
 ## Fetching the Dataset
 
 A slightly prepared dataset is stored on Google Drive.  To download the dataset and install
@@ -162,7 +167,13 @@ Finally, to evaluate your model on the test data, run the following.
 python evaluate.py --model_dir experiments/my_awesome_model --model my-awesome-model
 ```
 
-This simply reports accuracy and loss. To display a confusion matrix, which is saved as figure.png,
+This simply reports loss, average accuracy, average precision, recall, and F1 scores (using weighted averages). However, you can display per-class metrics by running the following:
+
+```bash
+python evaluate.py --model_dir experiments/my_awesome_model --model my-awesome-model --mode per-class
+```
+
+To display a confusion matrix, which is saved as figure.png,
 as well as other statistics such as class distribution, run this.
 
 ```bash
@@ -180,5 +191,3 @@ Then run this command to display a TensorBoard. You will need to navigate to loc
 ```bash
 python -m tensorboard.main --logdir=experiments/my_awesome_model/test_summaries
 ```
-
-TODO: import tf_metrics explanation

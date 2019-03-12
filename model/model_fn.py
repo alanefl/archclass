@@ -77,33 +77,7 @@ def model_fn(mode, inputs, params, model, reuse=False):
 
         labels_oh = tf.one_hot(labels, num_classes, dtype=tf.int32)
         predictions_oh = tf.one_hot(predictions, num_classes, dtype=tf.int32)
-        labels_two = tf.multiply(tf.constant(2), labels_oh)
-        evaluation = tf.subtract(labels_two, predictions_oh)
-        #evaluation values:
-        #tp = 2 - 1 = 1
-        #tn = 0 - 0 = 0
-        #fp = 0 - 1 = -1
-        #fn = 2 - 0 = 2
-        tp = tf.equal(evaluation, tf.constant(1))
-        tn = tf.equal(evaluation, tf.constant(0))
-        fp = tf.equal(evaluation, tf.constant(-1))
-        fn = tf.equal(evaluation, tf.constant(2))
-        tp_int = tf.cast(tp, tf.float32)
-        tn_int = tf.cast(tn, tf.float32)
-        fp_int = tf.cast(fp, tf.float32)
-        fn_int = tf.cast(fn, tf.float32)
-        tp_count = tf.reduce_sum(tp_int, axis=1)
-        tn_count = tf.reduce_sum(tn_int, axis=1)
-        fp_count = tf.reduce_sum(fp_int, axis=1)
-        fn_count = tf.reduce_sum(fn_int, axis=1)
 
-        predicted_pos = tf.add(tp_count, fp_count)
-        predicted_neg = tf.add(tn_count, fn_count)
-
-        accuracy_vec = tf.divide(tp_count,tf.add(tp_count, fn_count))
-        precision_vec = tf.divide(tp_count, predicted_pos)
-        recall_vec = tf.divide(tp_count, tf.add(tp_count, fn_count))
-        f1_vec = tf.divide(tf.multiply(tf.constant(2.0),tf.multiply(precision_vec, recall_vec)), tf.add(precision_vec, recall_vec))
         metrics = {
             'accuracy': tf.metrics.accuracy(labels=labels, predictions=tf.argmax(logits, 1)),
             'loss': tf.metrics.mean(loss),
@@ -145,10 +119,7 @@ def model_fn(mode, inputs, params, model, reuse=False):
     model_spec['loss'] = loss
     model_spec['accuracy'] = accuracy
     model_spec['confusion'] = confusion
-    model_spec['accuracy_vec'] = accuracy_vec
-    model_spec['precision_vec'] = precision_vec
-    model_spec['recall_vec'] = recall_vec
-    model_spec['f1_vec'] = f1_vec
+    model_spec['oh'] = tf.tuple([labels_oh, predictions_oh])
     model_spec['metrics_init_op'] = metrics_init_op
     model_spec['metrics'] = metrics
     model_spec['update_metrics'] = update_metrics_op

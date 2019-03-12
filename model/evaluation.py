@@ -37,10 +37,10 @@ def evaluate_sess(sess, model_spec, num_steps, writer=None, params=None, find_co
     confusion = model_spec['confusion']
     confusion_matrix = np.zeros((NUM_CLASSES,NUM_CLASSES))
 
-    accuracy_vec = model_spec['accuracy_vec']
-    precision_vec = model_spec['precision_vec']
-    recall_vec = model_spec['recall_vec']
-    f1_vec = model_spec['f1_vec']
+    oh_tensor = model_spec['oh']
+
+    labels_oh = np.zeros((NUM_CLASSES, 0))
+    predictions_oh = np.zeros((NUM_CLASSES, 0))
 
     if find_bad_images:
         writer = tf.summary.FileWriter(os.path.join('experiments/basic_cnn_no_dropout', 'test_summaries'), sess.graph)
@@ -56,10 +56,9 @@ def evaluate_sess(sess, model_spec, num_steps, writer=None, params=None, find_co
             _, summ = sess.run([bad_image, summary_op])
             writer.add_summary(summ)
         if find_perclass_metrics:
-            accuracy_vec = tf.convert_to_tensor(accuracy_vec).eval(session=sess)
-            precision_vec = tf.convert_to_tensor(precision_vec).eval(session=sess)
-            recall_vec = tf.convert_to_tensor(recall_vec).eval(session=sess)
-            f1_vec = tf.convert_to_tensor(f1_vec).eval(session=sess)
+            labels_returned, predictions_returned = tf.convert_to_tensor(oh_tensor).eval(session=sess)
+            labels_oh = np.concatenate((labels_oh, labels_returned.T), axis=1)
+            predictions_oh = np.concatenate((predictions_oh, predictions_returned.T), axis=1)
     if find_confusion:
         print(confusion_matrix)
         print('Total: {}'.format(np.sum(confusion_matrix)))
@@ -87,6 +86,33 @@ def evaluate_sess(sess, model_spec, num_steps, writer=None, params=None, find_co
         plt.savefig("figure.png")
 
     if find_perclass_metrics:
+        labels_two = np.multiply(2, labels_oh)
+        evaluation = np.subtract(labels_two, predictions_oh)
+        #evaluation values:
+        #tp = 2 - 1 = 1
+        #tn = 0 - 0 = 0
+        #fp = 0 - 1 = -1
+        #fn = 2 - 0 = 2
+        tp = np.equal(evaluation, 1)
+        tn = np.equal(evaluation, 0)
+        fp = np.equal(evaluation, -1)
+        fn = np.equal(evaluation, 2)
+        tp_int = tp.astype(float)
+        tn_int = tn.astype(float)
+        fp_int = fp.astype(float)
+        fn_int = fn.astype(float)
+        tp_count = np.sum(tp_int, axis=1)
+        tn_count = np.sum(tn_int, axis=1)
+        fp_count = np.sum(fp_int, axis=1)
+        fn_count = np.sum(fn_int, axis=1)
+
+        predicted_pos = np.add(tp_count, fp_count)
+        true_pos = np.add(tp_count, fn_count)
+
+        accuracy_vec = np.divide(tp_count, true_pos)
+        precision_vec = np.divide(tp_count, predicted_pos)
+        recall_vec = np.divide(tp_count, true_pos)
+        f1_vec = np.divide(np.multiply(2.0,np.multiply(precision_vec, recall_vec)), np.add(precision_vec, recall_vec))
         print("Accuracy:")
         print(accuracy_vec)
         print("Precision:")

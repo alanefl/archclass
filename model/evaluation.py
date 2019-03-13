@@ -109,7 +109,7 @@ def evaluate_sess(sess, model_spec, num_steps, writer=None, params=None, find_co
         predicted_pos = np.add(tp_count, fp_count)
         true_pos = np.add(tp_count, fn_count)
 
-        accuracy_vec = np.divide(tp_count, true_pos)
+        accuracy_vec = np.divide(np.add(tp_count, tn_count), np.add(true_pos, np.add(fp_count, tn_count)))
         precision_vec = np.divide(tp_count, predicted_pos)
         recall_vec = np.divide(tp_count, true_pos)
         f1_vec = np.divide(np.multiply(2.0,np.multiply(precision_vec, recall_vec)), np.add(precision_vec, recall_vec))

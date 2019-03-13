@@ -104,7 +104,7 @@ def train_and_evaluate(train_model_spec, eval_model_spec, model_dir, params, res
             metrics = evaluate_sess(sess, eval_model_spec, num_steps, eval_writer)
 
             # If best_eval, best_save_path
-            eval_acc = metrics['f1']
+            eval_acc = metrics['accuracy']
             if eval_acc >= best_eval_acc:
                 # Store new best accuracy
                 best_eval_acc = eval_acc

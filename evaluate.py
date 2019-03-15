@@ -11,6 +11,7 @@ from constants import MODEL_CHOICES
 from model.input_fn import input_fn
 from model.model_fn import model_fn
 from model.evaluation import evaluate
+from model.utils import install_tf_hub_modules
 from model.utils import Params
 from model.utils import set_logger
 
@@ -79,6 +80,9 @@ if __name__ == '__main__':
 
     # create the iterator over the dataset
     test_inputs = input_fn(False, test_filenames, test_labels, params)
+
+    # Install any external TF Hub module we may need
+    install_tf_hub_modules(params, args.model)
 
     # Define the model
     logging.info("Creating the model...")

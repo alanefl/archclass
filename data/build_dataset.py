@@ -20,7 +20,7 @@ ZIP_FILE_NAME = "_arc_dataset.zip"
 DATA_DIR = "_arc_dataset"
 RESIZED_OUTPUT_DIR = "prepared_arc_dataset"
 OUTPUT_DIR = "prepared_arc_dataset_not_resized"
-GDRIVE_FILE_ID = '1JM2k6xdHFYHLAWbY2XctugS5DP15Gbue'
+GDRIVE_FILE_ID = '17T-r1VCbbHKBCyvOO-dXn4hZK77lr_s9'
 
 
 def download_file_from_google_drive(id, destination):

@@ -20,7 +20,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument('--model_dir',
                     required=True,
                     help="Experiment directory containing params.json")
-parser.add_argument('--data_dir', default='data/prepared_arc_dataset',
+parser.add_argument('--data_dir', default='data/prepared_arc_dataset_aug',
                     help="Directory containing the dataset")
 parser.add_argument('--restore_from', default='best_weights',
                     help="Subdirectory of model dir or file containing the weights")

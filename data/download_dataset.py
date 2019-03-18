@@ -62,7 +62,7 @@ def main():
     print("Fetching dataset...")
     fetch_dataset()
     print("Got dataset.")
-    # unzip_original_dataset()
+    unzip_original_dataset()
 
     print("Done downloading dataset.")
 

@@ -10,6 +10,8 @@ from model.utils import save_dict_to_json
 from constants import NUM_CLASSES
 
 import numpy as np
+import matplotlib as mpl
+mpl.use('TkAgg')
 import matplotlib.pyplot as plt
 
 def evaluate_sess(sess, model_spec, num_steps, writer=None, params=None, find_confusion=False, find_bad_images=False, find_metrics=True, find_perclass_metrics=False):

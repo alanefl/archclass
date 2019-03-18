@@ -13,12 +13,12 @@ import os
 
 import tensorflow as tf
 
-from constants import ARCHITECTURE_STYLES
 from constants import MODEL_CHOICES
 from model.input_fn import input_fn
 from model.utils import Params
 from model.utils import set_logger
 from model.utils import install_tf_hub_modules
+from model.utils import extract_labels
 from model.model_fn import model_fn
 from model.training import train_and_evaluate
 
@@ -34,20 +34,7 @@ parser.add_argument('--model',
                     choices=MODEL_CHOICES,
                     help='What model to use for training.',
                     required=True)
-
-
-def extract_labels(filenames):
-    architecture_style_to_id = {}
-    for d in ARCHITECTURE_STYLES:
-        architecture_style_to_id[d['name']] = d['id']
-    labels = []
-    for filename in filenames:
-        labels.append(
-            architecture_style_to_id[
-                filename.split("/")[-1].split("-")[0]
-            ]
-        )
-    return labels
+parser.add_argument('--parts', action='store_true', help="Pass flag if training on the 'elements' dataset.")
 
 
 if __name__ == '__main__':
@@ -84,7 +71,7 @@ if __name__ == '__main__':
                       if f.endswith('.jpg')]
 
     # # Labels will be between 0 and 25 included (26 classes in total)
-    train_labels, dev_labels = extract_labels(train_filenames), extract_labels(dev_filenames)
+    train_labels, dev_labels = extract_labels(train_filenames, args.parts), extract_labels(dev_filenames, args.parts)
 
     # Specify the sizes of the dataset we train on and evaluate on
     params.train_size = len(train_filenames)

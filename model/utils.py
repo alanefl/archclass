@@ -3,6 +3,7 @@
 import json
 import logging
 import tensorflow_hub as hub
+from constants import ARCHITECTURE_STYLES
 
 
 
@@ -103,3 +104,26 @@ def install_tf_hub_modules(params, model):
         if model == model_name:
             d["module"] = hub.Module("hub_modules/%s" % model_name, trainable=params.fine_tune)
             params.add('tf_hub_module', d)
+
+
+def extract_labels(filenames, parts=False):
+    architecture_style_to_id = {}
+    for d in ARCHITECTURE_STYLES:
+        architecture_style_to_id[d['name']] = d['id']
+    labels = []
+
+    for filename in filenames:
+        if not parts:
+            labels.append(
+                architecture_style_to_id[
+                    filename.split("/")[-1].split("-")[0]
+                ]
+            )
+        else:
+            labels.append(
+                architecture_style_to_id[
+                    filename.split("/")[-1].split("-")[1]
+                ]
+            )
+
+    return labels

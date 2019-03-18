@@ -6,7 +6,6 @@ import os
 
 import tensorflow as tf
 
-from constants import ARCHITECTURE_STYLES
 from constants import MODEL_CHOICES
 from model.input_fn import input_fn
 from model.model_fn import model_fn
@@ -14,6 +13,7 @@ from model.evaluation import evaluate
 from model.utils import install_tf_hub_modules
 from model.utils import Params
 from model.utils import set_logger
+from model.utils import extract_labels
 
 
 parser = argparse.ArgumentParser()
@@ -34,20 +34,7 @@ parser.add_argument('--mode',
 parser.add_argument('--data_sub', default='test',
                     choices=['train','dev','test'],
                     help='Evaluate on train, dev, or test data.')
-
-
-def extract_labels(filenames):
-    architecture_style_to_id = {}
-    for d in ARCHITECTURE_STYLES:
-        architecture_style_to_id[d['name']] = d['id']
-    labels = []
-    for filename in filenames:
-        labels.append(
-            architecture_style_to_id[
-                filename.split("/")[-1].split("-")[0]
-            ]
-        )
-    return labels
+parser.add_argument('--parts', action='store_true', help="Pass flag if training on the 'elements' dataset.")
 
 
 if __name__ == '__main__':
@@ -73,7 +60,7 @@ if __name__ == '__main__':
     test_filenames = os.listdir(test_data_dir)
     test_filenames = [os.path.join(test_data_dir, f) for f in test_filenames if f.endswith('.jpg')]
 
-    test_labels = extract_labels(test_filenames)
+    test_labels = extract_labels(test_filenames, args.parts)
 
     # specify the size of the evaluation set
     params.eval_size = len(test_filenames)

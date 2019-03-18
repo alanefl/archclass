@@ -1,4 +1,4 @@
-"""Downloads prepared dataset, split into train, dev, test, and ready for training.
+"""Downloads prepared dataset, already split into train, dev, test, and ready for training.
 """
 import random
 import requests
@@ -6,11 +6,8 @@ import zipfile
 
 from tqdm import tqdm
 
-ZIP_FILE_NAME = "prepared_arc_dataset.zip"
-DATA_DIR = "_arc_dataset"
-RESIZED_OUTPUT_DIR = "prepared_arc_dataset"
-OUTPUT_DIR = "prepared_arc_dataset_not_resized"
-GDRIVE_FILE_ID = '1xE6WXa_-KW8mjHPkI0Olvb_Js64IVJLn'
+ZIP_FILE_NAME = "prepared_arc_dataset_aug.zip"
+GDRIVE_FILE_ID = '1sewJgpeTOjkcGOk9UbvuPup1-eeF5dzk'
 
 
 def download_file_from_google_drive(id, destination):

@@ -34,6 +34,7 @@ parser.add_argument('--mode',
 parser.add_argument('--data_sub', default='test',
                     choices=['train','dev','test'],
                     help='Evaluate on train, dev, or test data.')
+parser.add_argument('--print_all_labels', action='store_true', help="Whether to print all result labels")
 
 
 def extract_labels(filenames):
@@ -91,10 +92,10 @@ if __name__ == '__main__':
     logging.info("Starting evaluation")
     print(args.mode)
     if args.mode == 'confusion':
-        evaluate(model_spec, args.model_dir, params, args.restore_from, find_confusion=True, find_metrics=False)
+        evaluate(model_spec, args.model_dir, params, args.restore_from,  print_all=args.print_all_labels, find_confusion=True, find_metrics=False)
     elif args.mode == 'bad-images':
-        evaluate(model_spec, args.model_dir, params, args.restore_from, find_bad_images=True, find_metrics=False)
+        evaluate(model_spec, args.model_dir, params, args.restore_from,  print_all=args.print_all_labels, find_bad_images=True, find_metrics=False)
     elif args.mode == 'per-class':
-        evaluate(model_spec, args.model_dir, params, args.restore_from, find_metrics=False, find_perclass_metrics=True)
+        evaluate(model_spec, args.model_dir, params, args.restore_from,  print_all=args.print_all_labels, find_metrics=False, find_perclass_metrics=True)
     else:
-        evaluate(model_spec, args.model_dir, params, args.restore_from)
+        evaluate(model_spec, args.model_dir, params, args.restore_from, print_all=args.print_all_labels)

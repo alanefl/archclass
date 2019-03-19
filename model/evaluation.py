@@ -8,13 +8,37 @@ import tensorflow as tf
 
 from model.utils import save_dict_to_json
 from constants import NUM_CLASSES
+from constants import ARCHITECTURE_STYLES
 
 import numpy as np
 import matplotlib
 matplotlib.use('TkAgg')
 import matplotlib.pyplot as plt
 
-def evaluate_sess(sess, model_spec, num_steps, writer=None, params=None, find_confusion=False, find_bad_images=False, find_metrics=True, find_perclass_metrics=False):
+
+def get_human_readable_label(label_oh):
+    idx = 0
+    for idx_, label in enumerate(label_oh):
+        if label == 1:
+            idx = idx_
+            break
+
+    for style in ARCHITECTURE_STYLES:
+        if int(style["id"]) == idx:
+            return style["name"]
+    return None
+
+
+def evaluate_sess(sess,
+                  model_spec,
+                  num_steps,
+                  writer=None,
+                  params=None,
+                  print_all=False,
+                  find_confusion=False,
+                  find_bad_images=False,
+                  find_metrics=True,
+                  find_perclass_metrics=False):
     """Train the model on `num_steps` batches.
 
     Args:
@@ -59,8 +83,22 @@ def evaluate_sess(sess, model_spec, num_steps, writer=None, params=None, find_co
             writer.add_summary(summ)
         if find_perclass_metrics:
             labels_returned, predictions_returned = tf.convert_to_tensor(oh_tensor).eval(session=sess)
+
+            # Let's stack one-hot vectors for labels and predictions horizontally over the entire dataset.
             labels_oh = np.concatenate((labels_oh, labels_returned.T), axis=1)
             predictions_oh = np.concatenate((predictions_oh, predictions_returned.T), axis=1)
+
+    assert(predictions_oh.shape == labels_oh.shape)
+
+    if print_all:
+        _, examples = predictions_oh.shape
+        for i in range(examples):
+            prediction = get_human_readable_label(predictions_oh[:,i])
+            label = get_human_readable_label(labels_oh[:, i])
+            print(label, prediction)
+
+    exit(0)
+
     if find_confusion:
         print(confusion_matrix)
         print('Total: {}'.format(np.sum(confusion_matrix)))
@@ -125,7 +163,7 @@ def evaluate_sess(sess, model_spec, num_steps, writer=None, params=None, find_co
         print(f1_vec)
 
 
-def evaluate(model_spec, model_dir, params, restore_from, find_confusion=False, find_bad_images=False, find_metrics=True, find_perclass_metrics=False):
+def evaluate(model_spec, model_dir, params, restore_from, print_all=False, find_confusion=False, find_bad_images=False, find_metrics=True, find_perclass_metrics=False):
     """Evaluate the model
 
     Args:
@@ -151,9 +189,18 @@ def evaluate(model_spec, model_dir, params, restore_from, find_confusion=False, 
         # Evaluate
         num_steps = (params.eval_size + params.batch_size - 1) // params.batch_size
         if find_metrics:
-            metrics = evaluate_sess(sess, model_spec, num_steps, find_confusion=find_confusion, find_bad_images=find_bad_images, find_metrics=find_metrics, find_perclass_metrics=find_perclass_metrics)
+            metrics = evaluate_sess(sess, model_spec, num_steps, print_all=print_all, find_confusion=find_confusion, find_bad_images=find_bad_images, find_metrics=find_metrics, find_perclass_metrics=find_perclass_metrics)
             metrics_name = '_'.join(restore_from.split('/'))
             save_path = os.path.join(model_dir, "metrics_test_{}.json".format(metrics_name))
             save_dict_to_json(metrics, save_path)
         else:
-            evaluate_sess(sess, model_spec, num_steps, find_confusion=find_confusion, find_bad_images=find_bad_images, find_metrics=find_metrics, find_perclass_metrics=find_perclass_metrics)
+            evaluate_sess(
+                sess,
+                model_spec,
+                num_steps,
+                print_all=print_all,
+                find_confusion=find_confusion,
+                find_bad_images=find_bad_images,
+                find_metrics=find_metrics,
+                find_perclass_metrics=find_perclass_metrics
+        )

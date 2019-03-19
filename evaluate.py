@@ -74,6 +74,9 @@ if __name__ == '__main__':
     test_filenames = os.listdir(test_data_dir)
     test_filenames = [os.path.join(test_data_dir, f) for f in test_filenames if f.endswith('.jpg')]
 
+    if args.print_all_labels:
+        print(test_filenames)
+
     test_labels = extract_labels(test_filenames)
 
     # specify the size of the evaluation set

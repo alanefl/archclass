@@ -35,6 +35,8 @@ with open(args.file, 'r') as f:
             curr_epoch_no = int(line.split(" ")[1].split("/")[0])
         else:
             if "Train" in line:
-                train_accuracy, train_loss = [line[2:].split(":")[2].split(";")[0].strip(), line[2:].split(":")[-1].strip()]
+                line = line[2:].split(";")
+                train_accuracy, train_loss = [line[0].split(":")[-1].strip(), line[1].split(":")[-1].strip()]
             elif "Eval" in line:
-                eval_accuracy, eval_loss = [line[2:].split(":")[2].split(";")[0].strip(), line[2:].split(":")[-1].strip()]
+                line = line[2:].split(";")
+                eval_accuracy, eval_loss = [line[0].split(":")[-1].strip(), line[1].split(":")[-1].strip()]
